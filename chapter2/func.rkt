@@ -12,7 +12,7 @@
     list2
     (cons (car list1) (append (cdr list1) list2))))
 
-(define (reverse items)
+(define (reverse-bad items)
   (define (iter elems acc)
     (if (null? elems)
       acc
@@ -88,3 +88,11 @@
                 (map (lambda (p) (cons x p))
                       (permutations (remove x s))))
               s)))
+
+(define (reverse elems)
+  (accumulate
+    (lambda (x acc) (append acc (list x)))
+    '()
+    elems
+  )
+)
