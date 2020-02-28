@@ -3,6 +3,7 @@
 (require "func.rkt")
 (require "haffman.rkt")
 (require rackunit)
+(provide encode)
 
 
 (define (encode message tree)

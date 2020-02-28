@@ -3,6 +3,7 @@
 (require "func.rkt")
 (require "haffman.rkt")
 (require rackunit)
+(provide generate-huffman-tree)
 
 (define (generate-huffman-tree pairs)
   (succesive-merge (make-leaf-set pairs)))
