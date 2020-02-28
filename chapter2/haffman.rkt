@@ -32,7 +32,7 @@
 
 (define (weight tree)
   (if (leaf? tree)
-      (list (weight-leaf tree))
+      (weight-leaf tree)
       (cadddr tree)))
 
 (define (decode bits tree)
