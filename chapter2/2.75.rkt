@@ -23,10 +23,10 @@
 (define (make-from-mag-ang r a)
     (define (dispatch op)
     (cond
-      ((eq? op 'real-part) (* x (cos r)))
-      ((eq? op 'imag-part) (* x (sin r)))
-      ((eq? op 'magnitude) x)
-      ((eq? op 'angle) y)
+      ((eq? op 'real-part) (* r (cos a)))
+      ((eq? op 'imag-part) (* r (sin a)))
+      ((eq? op 'magnitude) r)
+      ((eq? op 'angle) a)
       (else
         (error "Unknown operation --MAKE-FROM-REAL-IMAG" op))
     )
