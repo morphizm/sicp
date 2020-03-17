@@ -3,6 +3,19 @@
 (require "func.rkt")
 (require rackunit)
 
+(define (attach-tag type-tag contents)
+  (cons type-tag contents))
+
+(define (type-tag datum)
+  (if (pair? datum)
+      (car datum)
+      (error "Bad tagged data -- TYPE-TAG", datum)))
+
+(define (contents datum)
+  (if (pair? datum)
+      (cdr datum)
+      (error "Bad tagged data -- CONTENTS", datum)))
+
 (define (add x y) (apply-generic 'add x y))
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
@@ -68,6 +81,30 @@
   ((get 'make 'rational) n d))
 
 (define (install-complex-package)
+  (define (real-part z)
+    (cond ((rectangular? z)
+          (real-part-rectangular (contents z)))
+          ((polar? z)
+          (real-part-polar (contents z)))
+          (else (error "Unknown type -- REAL-PART" z))))
+  (define (imag-part z)
+    (cond ((rectangular? z)
+          (imag-part-rectangular (contents z)))
+          ((polar? z)
+          (imag-part-polar (contents z)))
+          (else (error "Unknown type -- IMAG-PART" z))))
+  (define (magnitude z)
+    (cond ((rectangular? z)
+          (magnitude-rectangular (contents z)))
+          ((polar? z)
+          (magnitude-polar (contents z)))
+          (else (error "Unknown type -- MAGNITUDE" z))))
+  (define (angle z)
+    (cond ((rectangular? z)
+          (angle-rectangular (contents z)))
+          ((polar? z)
+          (angle-polar (contents z)))
+          (else (error "Unknown type -- ANGLE" z))))
   (define (make-from-real-imag x y)
     ((get 'make-from-real-imag 'rectangular) x y))
   (define (make-from-mag-ang r a)
@@ -98,6 +135,11 @@
         (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'complex
         (lambda (r a) (tag (make-from-mag-ang r a))))
+
+  (put 'real-part '(complex) real-part)
+  (put 'imag-part '(complex) imag-part)
+  (put 'magnitude '(complex) magnitude)
+  (put 'angle '(complex) angle)
   'done
 )
 
