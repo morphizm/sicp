@@ -9,12 +9,12 @@
 (define (type-tag datum)
   (if (pair? datum)
       (car datum)
-      (error "Bad tagged data -- TYPE-TAG", datum)))
+      (error "Bad tagged data -- TYPE-TAG" datum)))
 
 (define (contents datum)
   (if (pair? datum)
       (cdr datum)
-      (error "Bad tagged data -- CONTENTS", datum)))
+      (error "Bad tagged data -- CONTENTS" datum)))
 
 (define (add x y) (apply-generic 'add x y))
 (define (sub x y) (apply-generic 'sub x y))

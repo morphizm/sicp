@@ -3,6 +3,8 @@
 (require "func.rkt")
 (require rackunit)
 
+(provide real-part imag-part)
+
 (define (square x) (* x x))
 
 (define (add-complex z1 z2)
@@ -51,12 +53,12 @@
 (define (type-tag datum)
   (if (pair? datum)
       (car datum)
-      (error "Bad tagged data -- TYPE-TAG", datum)))
+      (error "Bad tagged data -- TYPE-TAG" datum)))
 
 (define (contents datum)
   (if (pair? datum)
       (cdr datum)
-      (error "Bad tagged data -- CONTENTS", datum)))
+      (error "Bad tagged data -- CONTENTS" datum)))
 
 (define (rectangular? z)
   (eq? (type-tag z) 'rectangular))
@@ -124,4 +126,4 @@
 (define (make-from-real-imag x y)
   (make-from-real-imag-rectangular x y))
 (define (make-from-mag-ang r a)
-  (make-from-real-mag-ang-polar r a))
+  (make-from-mag-ang-polar r a))
