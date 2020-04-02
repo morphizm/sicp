@@ -8,14 +8,18 @@
     (if (null? x)
         y
         (let ([temp (cdr x)])
+          ; (displayln x)
+          ; (displayln y)
+          ; (displayln temp)
           (set-cdr! x y)
-          (loop temp x))))
+          (loop temp x)
+          )))
   (loop x '()))
 
 ; (mystery (list 1 2 3 4 5 6 7 8))
 
-(define v (list 'a 'b 'c' d))
+(define v (list 'a 'b 'c 'd))
 v
 (define w (mystery v))
-v 
+v
 w
