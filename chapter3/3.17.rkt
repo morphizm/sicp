@@ -3,24 +3,22 @@
 (require rackunit)
 (require "mutable-pairs.rkt")
 
+
 (define (count-pairs x)
   (define pairs '())
-  (define (iter elems acc)
-    (if (null? elems)
-      acc
-      (let ([first (car elems)]
-            [rest (cdr elems)])
-        (if (not (pair? first))
-            (iter rest acc)
-            (if (has-pair? pairs first)
-                (iter rest acc)
-                (begin
-                  (set! pairs (cons first pairs))
-                  (iter (cons (car first) (cons (cdr first) rest)) (+ acc 1)))
-            )))))
-  (iter x 0)
-)
-
+  (define (iter elems)
+    (if (not (pair? elems))
+      0
+      (if (has-pair? pairs elems)
+        (+ (iter (car elems))
+           (iter (cdr elems))
+          0)
+        (begin 
+          (set! pairs (cons elems pairs))
+          (+ (iter (car elems))
+             (iter (cdr elems))
+            1)))))
+  (iter x))
 
 (define pairs (cons 1 (cons 2 (cons 3 '()))))
 (define pairs2 (cons (cons 1 1) (cons 2 (cons 3 '()))))
@@ -32,17 +30,18 @@
 (define third (cdr (cdr pairs)))
 (define last (cdr (cdr (cdr pairs))))
 
-second
-third
-last
+; second
+; third
+; last
 
-; 4
+; 4 ---- 3!
 (set-car! pairs third)
 (count-pairs pairs)
 
-; 7
+; 7 --- 3!
 (set-car! pairs second)
 (set-car! second third)
 (count-pairs pairs)
 
+; 4
 (count-pairs pairs2)
