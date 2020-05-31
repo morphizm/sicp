@@ -1,18 +1,10 @@
 #lang racket/base
 
-(require rackunit)
-(require "math.rkt")
 (require "mutable-pairs.rkt")
-
-
-(define (same-key? key-1 key-2)
-  (let ([latency 0.5]
-        [diff (abs (- key-1 key-2))])
-    (<= diff latency)))
 
 (define (assoc key records)
   (cond ((null? records) #f)
-        ([same-key? key (caar records)] (car records))
+        ([equal? key (caar records)] (car records))
         (else (assoc key (cdr records)))))
 
 (define (make-table)
@@ -48,7 +40,3 @@
 (define operation-table (make-table))
 (define get (operation-table 'lookup-proc))
 (define put (operation-table 'insert-proc!))
-
-(check-equal? (same-key? 2 3) #f)
-(check-equal? (same-key? 2 2.4) #t)
-(check-equal? (same-key? 2 2.5) #t)

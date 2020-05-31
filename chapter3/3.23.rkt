@@ -3,8 +3,41 @@
 (require rackunit)
 (require "mutable-pairs.rkt")
 
+(define (front-ptr queue) (car queue))
+(define (rear-ptr queue) (cdr queue))
+(define (set-front-ptr! queue item) (set-car! queue item))
+(define (set-rear-ptr! queue item) (set-cdr! queue item))
+
+(define (empty-queue? queue) (null? (front-ptr queue)))
+
+(define (make-queue) (cons '() '()))
+
+(define (front-queue queue)
+  (if (empty-queue? queue)
+      (error ("FRONT call with empty queue" queue))
+      (car (front-ptr queue))))
+
+(define (insert-queue! queue item)
+  (let ([new-pair (cons item '())])
+    (cond ((empty-queue? queue)
+           (set-front-ptr! queue new-pair)
+           (set-rear-ptr! queue new-pair)
+           queue)
+           (else
+            (set-cdr! (rear-ptr queue) new-pair)
+            (set-rear-ptr! queue new-pair)
+            queue))))
+
+(define (delete-queue! queue)
+  (cond ((empty-queue? queue)
+         (error "DELETE! call with empty queue" queue))
+         (else
+          (set-front-ptr! queue (cdr (front-ptr queue)))
+          queue)))
+
+
 (define (make-deque)
-  (cons '() '()))
+  (cons (make-queue) (make-queue)))
 
 (define (front-deque deque)
   (car deque))
@@ -14,9 +47,6 @@
 
 (define (rear-deque deque)
   (cdr deque))
-
-(define (set-front-ptr! deque item) (set-car! deque item))
-(define (set-rear-ptr! deque item) (set-cdr! deque item))
 
 (define (front-insert-deque! deque item)
   (let ([new-pair (cons item '())])
@@ -59,10 +89,10 @@
 (displayln d1)
 (front-insert-deque! d1 'a)
 (displayln d1)
-(front-insert-deque! d1 'b)
-(displayln d1)
-(rear-insert-deque! d1 'c)
-(displayln d1)
+; (front-insert-deque! d1 'b)
+; (displayln d1)
+; (rear-insert-deque! d1 'c)
+; (displayln d1)
 
 
 ; (insert-queue! q1 'a)

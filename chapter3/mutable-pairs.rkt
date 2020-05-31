@@ -2,7 +2,7 @@
 
 (require rackunit)
 (provide cons set-car! set-cdr! car cdr list pair? last-pair make-cycle
-         has-pair?
+         has-pair? caar
 )
 
 (define cons mcons)
@@ -49,3 +49,6 @@
 ; x; 3 2
 ; (set-cdr! x 22)
 ; x; 3 22
+
+(define (caar pair)
+  (car (car pair)))
