@@ -3,8 +3,8 @@
 (require racket/promise)
 (provide stream-null? the-empty-stream display-stream
          display-line stream-map stream-enumerate-interval stream-ref stream-filter
-         cons-stream stream-car stream-cdr
-         add-streams scale-stream integers-starting-from)
+         cons-stream stream-car stream-cdr interleave
+         add-streams scale-stream pairs integers-starting-from)
 
 (define stream-null? null?)
 (define the-empty-stream '())
@@ -79,3 +79,28 @@
 
 (define (scale-stream stream factor)
   (stream-map (lambda (x) (* x factor)) stream))
+
+(define (interleave s1 s2)
+  (if (stream-null? s1)
+      s2
+      (cons-stream (stream-car s1)
+                   (interleave s2 (stream-cdr s1)))))
+
+(define (pairs-o s t)
+  (cons-stream
+    (list (stream-car s) (stream-car t))
+    (interleave
+     (stream-map (lambda (x) (list (stream-car s) x))
+                 (stream-cdr t))
+     (pairs (stream-cdr s) (stream-cdr t)))))
+
+(define (pairs s t)
+  (if (stream-null? s)
+    the-empty-stream
+    (cons-stream
+      (list (stream-car s) (stream-car t))
+      (interleave
+      (stream-map (lambda (x) (list (stream-car s) x))
+                  (stream-cdr t))
+      (pairs (stream-cdr s) (stream-cdr t))))))
+
