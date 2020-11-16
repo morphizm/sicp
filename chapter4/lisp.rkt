@@ -1,6 +1,8 @@
 #lang racket/base
 (require "./func.rkt")
 
+(provide eval apply list-of-values no-operands? first-operand rest-operands)
+
 (define (eval exp env)
   (cond [(self-evaluating? exp) exp]
         [(variable? exp) (lookup-variable-value exp env)]
@@ -46,9 +48,9 @@
 
 (define (eval-sequence exps env)
   (cond [(last-exp? exps) (eval (first-exp exps) env)]
-        [(else
+        [else
           (eval (first-exp exps) env)
-          (eval-sequence (rest-exps exps) env))]))
+          (eval-sequence (rest-exps exps) env)]))
 
 (define (eval-assignment exp env)
   (set-variable-value! (assignment-variable exp)
@@ -82,6 +84,7 @@
   (tagged-list? exp 'set!))
 (define (assignment-variable exp) (cadr exp))
 (define (assignment-value exp) (caddr exp))
+
 (define (definition? exp)
   (tagged-list? exp 'define))
 (define (definition-variable exp)
@@ -89,7 +92,7 @@
       [cadr exp]
       [caadr exp]))
 (define (definition-value exp)
-  (if [symbol? exp]
+  (if [symbol? (cadr exp)]
       [caddr exp]
       [make-lambda (cdadr exp)
                     (cddr exp)]))
@@ -98,6 +101,7 @@
 (define (lambda-body exp) (cddr exp))
 (define (make-lambda parameters body)
   (cons 'lambda (cons parameters body)))
+
 (define (if? exp) (tagged-list? exp 'if))
 (define (if-predicate exp) (cadr exp))
 (define (if-consequent exp) (caddr exp))
@@ -107,6 +111,7 @@
       false))
 (define (make-if predicate consequent alternative)
   (list 'if predicate consequent alternative))
+
 (define (begin? exp) (tagged-list? exp 'begin))
 (define (begin-actions exp) (cdr exp))
 (define (last-exp? seq) (null? (cdr seq)))
@@ -117,6 +122,7 @@
         [(last-exp? seq) (first-exp seq)]
         [else (make-begin seq)]))
 (define (make-begin seq) (cons 'begin seq))
+
 (define (application? exp) (pair? exp))
 (define (operator exp) (car exp))
 (define (operands exp) (cdr exp))
@@ -144,4 +150,30 @@
                       (sequence->exp (cond-actions first))
                       (expand-clauses rest)]))))
 
+(define rest-exps rest-exp)
 
+; Not ready
+(define (lookup-variable-value exp env)
+  (displayln "MOCK lookup-variable-value"))
+(define (make-procedure params body env)
+  (displayln 'MOCK))
+(define (primitive-procedure? procedure)
+  (displayln 'MOCK)
+  false)
+(define (apply-primitive-procedure procedure arguments)
+  (displayln 'Mock))
+(define (compound-procedure? procedure)
+  (displayln 'MOCK)
+  false)
+(define (procedure-body procedure)
+  (displayln 'mock))
+(define (extend-environment params arguments env)
+  (displayln 'mock))
+(define (procedure-parameters procedure)
+  (displayln 'mock))
+(define (procedure-environment procedure)
+  (displayln 'mock))
+(define (set-variable-value! variable value env)
+  (displayln 'mock))
+(define (define-variable! variable value env)
+  (displayln 'mock))
